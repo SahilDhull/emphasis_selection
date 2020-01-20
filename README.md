@@ -26,8 +26,11 @@ The dataset taken is the dataset provided in SemEval-2020 Task-10: Emphasis Sele
 
 ## Directory Structure
 datasets/ - contains the train and development set
+
 glove/ - contains the script for preprocessing GloVe embeddings
+
 model/ - contains the codes for all the models used
+
 tests/ - contains the results/logs of the tests run
 
 ### References
