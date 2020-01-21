@@ -1,4 +1,8 @@
 glove.6B/
 glove.6B.zip
+*.zip
 glove/glove_100.pkl
 *.pkl
+.ipynb_checkpoints/
+__pycache__/
+extra/
