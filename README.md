@@ -17,9 +17,9 @@ Given a sequence of words or tokens C = <img src="https://render.githubuserconte
 ## Directory Structure
 datasets/ - contains the train and development sets
 
-BiLSTM + Attention Approach/ - contains the model for this approach
+BiLSTM_Attention_approach/ - contains the model for 'BiLSTM + Attention' approach
 
-Transformers Approach/ - contains model and ensemble files for this approach
+Transformers_approach/ - contains model and ensemble files for Transformers approach
 
 requirements.txt - contains versions of packages required
 
