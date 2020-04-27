@@ -1,12 +1,5 @@
 # SemEval 2020 - Task 10: Emphasis Selection For Written Text in Visual Media
 
-# Installation
-```
-git clone https://github.com/SahilDhull/emphasis_selection.git
-cd emphasis_selection
-pip install -r requirements.txt
-```
-
 ### Team 'Corona Survivors':
 - Rishabh Agarwal
 - [Sahil Dhull](https://sahildhull.github.io/)
@@ -29,3 +22,10 @@ BiLSTM + Attention Approach/ - contains the model for this approach
 Transformers Approach/ - contains model and ensemble files for this approach
 
 requirements.txt - contains versions of packages required
+
+## Installation
+```
+git clone https://github.com/SahilDhull/emphasis_selection.git
+cd emphasis_selection
+pip install -r requirements.txt
+```
