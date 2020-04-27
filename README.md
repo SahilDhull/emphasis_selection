@@ -1,4 +1,4 @@
-# Emphasis Selection
+# SemEval 2020 - Task 10: Emphasis Selection For Written Text in Visual Media
 
 This is our project for the course CS698O (Topics in NLP).
 
