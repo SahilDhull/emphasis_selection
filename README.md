@@ -1,17 +1,18 @@
 # SemEval 2020 - Task 10: Emphasis Selection For Written Text in Visual Media
 
-This is our project for the course CS698O (Topics in NLP).
-
-### Group Members:
+### Team 'Corona Survivors':
 - Rishabh Agarwal
-- Sahil Dhull
+- ([Sahil Dhull](https://sahildhull.github.io/))
 - Vipul Singhal
+
+#### Under the guidance of:
+([Prof. Ashutosh Modi](https://ashutosh-modi.github.io/))
 
 ## Problem Statement
 The problem statement ([Task 10 in SemEval-2020](https://competitions.codalab.org/competitions/20815)) is designing automatic methods for emphasis selection i.e. choosing candidates for emphasis in short written text.
 
 More formally,
-Given a sequence of words or tokens C = $`\{ x_1, x_2, ..., x_n \}`$, we want to compute a score $`S_i`$ for each $`x_i`$ which indicates the degree of emphasis to be laid on the word.
+Given a sequence of words or tokens C = <img src="https://render.githubusercontent.com/render/math?math=\{ x_1, x_2, ..., x_n \}">, we want to compute a score $`S_i`$ for each $`x_i`$ which indicates the degree of emphasis to be laid on the word.
 
 ## Proposed Approach
 We propose an end-to-end model which takes as input the words in the text and corresponding to each word, gives a score describing the degree of emphasis to be laid on the word. We plan to try at least two different types of sequence labeling model to learn emphasis patterns.
