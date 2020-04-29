@@ -272,6 +272,7 @@ def load_embeddings(emb_file, word_map, expand_vocab=True):
     return embeddings, word_map, lm_vocab_size
 
 embeddings, word_map, lm_vocab_size = load_embeddings(emb_file, word_map,expand_vocab)
+charset_size = len(char_map)
 model = LM_LSTM_CRF(charset_size, char_emb_dim, char_rnn_dim, char_rnn_layers,
                  lm_vocab_size, word_emb_dim, word_rnn_dim, word_rnn_layers, dropout).to(device)
         
