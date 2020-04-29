@@ -136,7 +136,6 @@ def create_input_tensors(words, tags, probs, word_map, char_map, tag_map):
 
     # Sanity check
     assert word_pad_len == max(list(map(lambda s: len(s), tmaps)))
-
     padded_wmaps = []
     padded_cmaps_f = []
     padded_cmaps_b = []
