@@ -25,7 +25,7 @@ options_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_5
 weight_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5"
 
 
-# Different parameters
+# Different hyperparameters
 word_emb_dim = 2048 
 word_rnn_dim = 512
 char_rnn_dim = 300
@@ -34,7 +34,6 @@ fine_tune_word_embeddings = False
 target_size = 1
 hidden_size = 20
 char_emb_dim = 30
-charset_size = len(char_map)
 char_rnn_layers = 2
 word_rnn_layers = 2
 
