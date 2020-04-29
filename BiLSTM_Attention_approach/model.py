@@ -1,21 +1,17 @@
 class ElmoLayer(nn.Module):
     def __init__(self,options_file, weight_file):
         super(ElmoLayer, self).__init__()
-        self.elmo = Elmo(options_file, weight_file, 2, dropout=0.3)
-
-
+        self.elmo = Elmo(options_file, weight_file, 2, dropout=0.3) #defining Elmo with 2 num_output_representations and 0.3 dropout
 
     def forward(self, words):
-        character_ids = batch_to_ids(words)
+        character_ids = batch_to_ids(words) #converting words to ids
         character_ids = character_ids.to(device)
         elmo_output = self.elmo(character_ids)
         elmo_representation = torch.cat(elmo_output['elmo_representations'], -1)
-        #mask = elmo_output['mask']
         elmo_representation.to(device)
         if torch.cuda.is_available():
             elmo_representation = elmo_representation.cuda()
-            #mask = mask.cuda()
-        return elmo_representation #, mask
+        return elmo_representation 
     
 
 class Attention(nn.Module):
@@ -132,8 +128,7 @@ class LM_LSTM_CRF(nn.Module):
 
         self.attention = Attention(self.word_rnn_dim*2).to(device)
         
-        self.fc1 = nn.Linear((self.word_rnn_dim*2)+1, self.hidden_size) 
-        #self.fc1 = nn.Linear((self.word_rnn_dim*2), self.hidden_size)  
+        self.fc1 = nn.Linear((self.word_rnn_dim*2)+1, self.hidden_size) #Note that the extra +1 is for the pos tag concat
         self.fc2 = nn.Linear(self.hidden_size, self.target_size)
         
     def init_word_embeddings(self, embeddings):
@@ -207,15 +202,12 @@ class LM_LSTM_CRF(nn.Module):
         wmaps = wmaps[word_sort_ind]
         probs = probs[word_sort_ind]
         tmaps = tmaps[word_sort_ind]
-        cf_selected = cf_selected[word_sort_ind]  # for language model
+        cf_selected = cf_selected[word_sort_ind]  
         cb_selected = cb_selected[word_sort_ind]
         word_order = word_sort_ind.tolist()
         words_word_sorted = []
         for i in range(len(word_order)):
             words_word_sorted.append(words_char_sorted[word_order[i]])
-        # Embedding look-up for words
-       # w = self.word_embeds(wmaps)  # (batch_size, word_pad_len, word_emb_dim)
-        #w = self.dropout(w)
         w = self.elmo(words_word_sorted)
         
         
@@ -239,7 +231,7 @@ class LM_LSTM_CRF(nn.Module):
         w, _ = pad_packed_sequence(w, batch_first=True)  # (batch_size, max_word_len_in_batch, word_rnn_dim)
         w = self.dropout(w)
         
-        mask = []
+        mask = [] # creating mask 1 for the token where actual word is there and zero for padding
         for i in range(len(wmap_lengths)):
             mask_row = (np.concatenate([np.ones(wmap_lengths[i]),np.zeros(len(wmaps[i])-wmap_lengths[i])])).tolist()
             mask.append(mask_row)
@@ -250,8 +242,7 @@ class LM_LSTM_CRF(nn.Module):
         att_output = torch.cat([att_output, tmaps],2)
         
         
-        # fc layers
-        #w = torch.relu(self.fc1(w)) 
+        # fc layers 
         w = torch.relu(self.fc1(att_output)) 
         w = self.dropout(w)
         
