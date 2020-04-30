@@ -31,12 +31,13 @@ def read_map(file, map):
     
   # print(i)
 
-def print_to_file(save_path,file_path, var):
+def print_to_file(save_path, file_path, var):
   with open(save_path + file_path, "w") as text_file:
     text_file.write(var)
 
+
+# Change this whole implementation
 cur_path = test_path
-save_path = cur_path
 
 n = 13
 
@@ -203,5 +204,5 @@ for i in range(test_length):
 
 file_name = 'bert_2_roberta_3_xlnet_8.txt'
 print_to_file(save_path, file_name, s)
-print_to_file(save_path, 'acc_'+file_name, str(v_score)+"\n"+str(m_score))
+# print_to_file(save_path, 'acc_'+file_name, str(v_score)+"\n"+str(m_score))
 

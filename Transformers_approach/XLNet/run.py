@@ -399,7 +399,12 @@ def train(model,  optimizer, scheduler, tokenizer, max_epochs, save_path, device
 
             # Saving the test output at best validation accuracy
             os.makedirs(save_path, exist_ok=True)
-            test_path = 'test'+str(x)+'.txt'
+
+            val_path = 'val'+str(ind)+'.txt'
+            with open(save_path + val_path, "w") as text_file:
+              text_file.write(val_out)
+
+            test_path = 'test'+str(ind)+'.txt'
             with open(save_path + test_path, "w") as text_file:
               text_file.write(test_out)
 
@@ -423,7 +428,7 @@ def train(model,  optimizer, scheduler, tokenizer, max_epochs, save_path, device
 
 model = transformer_model(model_name).to(device)
 
-optimizer = AdamW(model.parameters(), lr=learning_rate, eps = epsilon)
+optimizer = AdamW(model.parameters(), lr = learning_rate, eps = epsilon)
 
 epochs = num_epochs
 total_steps = len(train_dataloader) * epochs
