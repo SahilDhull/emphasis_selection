@@ -27,5 +27,8 @@ requirements.txt - contains versions of packages required
 ```
 git clone https://github.com/SahilDhull/emphasis_selection.git
 cd emphasis_selection
+virtualenv project
 pip install -r requirements.txt
 ```
+
+Note: If not having virtualenv, install it using: `pip install virtualenv`
