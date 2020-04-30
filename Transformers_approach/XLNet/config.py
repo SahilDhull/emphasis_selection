@@ -34,6 +34,6 @@ max_match = [0,0,0,0]
 val_out = ""
 test_out = ""
 
-save_path = '../ensemble/'
+save_path = '../runs/xlnet/'
 # Index of the run of current model, change it after each run
 ind = 1
