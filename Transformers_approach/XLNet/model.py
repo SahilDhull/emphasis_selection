@@ -1,19 +1,20 @@
 from config import *
 
 class transformer_model(nn.Module):
-  def __init__(self, model_name, drop_prob = 0.3):
+  def __init__(self, model_name, drop_prob = dropout_prob):
     super(transformer_model, self).__init__()
 
     config = XLNetConfig.from_pretrained(model_name, output_hidden_states=True)
     self.xlnet = XLNetModel.from_pretrained(model_name, config = config)
     
-    # the commented lines freezes layers of the model
-    # cnt=0
-    # for child in xlnet.xlnet.children():
-    #   cnt = cnt + 1
-    #   if cnt<=23:
-    #     for param in child.parameters():
-    #       param.requires_grad = False
+    # freezes layers of the model
+    if to_freeze:
+      cnt=0
+      for child in xlnet.xlnet.children():
+        cnt = cnt + 1
+        if cnt<=freeze_layers:
+          for param in child.parameters():
+            param.requires_grad = False
 
     self.fc1 = nn.Linear(xlnet_dim, hidden_dim1)
     self.fc2 = nn.Linear(hidden_dim1, hidden_dim2)

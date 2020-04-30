@@ -80,7 +80,7 @@ def read_token_map(file,word_index = 1,prob_index = 4, caseless = False):
   
   return tokenized_texts, token_map, token_labels, sent_length
 
-def read_test_token_map(file,word_index = 1, caseless = False):
+def read_test_token_map(file, word_index = 1, caseless = to_case):
   
   with codecs.open(file, 'r', 'utf-8') as f:
       lines = f.readlines()
@@ -196,7 +196,7 @@ test_data = TensorDataset(f_input_ids, f_token_map, f_attention_masks, f_sent_le
 test_sampler = SequentialSampler(test_data)
 test_dataloader = DataLoader(test_data, sampler=test_sampler, batch_size=batch_size,shuffle = False)
 
-def read_for_output(file,word_index = 1):
+def read_for_output(file, word_index = 1):
   
   with codecs.open(file, 'r', 'utf-8') as f:
       lines = f.readlines()
@@ -329,24 +329,6 @@ def test(model):
   # print(s)
   return s
 
-def save_all(x):
-  print("\nSaving...\n")
-  
-  os.makedirs(save_path, exist_ok=True)
-
-  val_path = 'val'+str(x)+'.txt'
-  test_path = 'test'+str(x)+'.txt'
-  max_path = 'max'+str(x)+'.txt'
-
-  with open(save_path + val_path, "w") as text_file:
-    text_file.write(val_out)
-
-  with open(save_path + test_path, "w") as text_file:
-    text_file.write(test_out)
-
-  with open(save_path + max_path, "w") as text_file:
-    text_file.write(str(max_accuracy)+"\n"+str(max_match))
-
 def validation(model):
   print("")
   print("Running Validation...")
@@ -460,15 +442,24 @@ def train(model,  optimizer, scheduler, tokenizer, max_epochs, save_path, device
 
         if step % 10 == 0:
           accuracy, match_m, outs = validation(model)
+
           if(accuracy > max_accuracy):
+            # Validation accuracy is the highest
             max_accuracy = accuracy
             max_match = match_m
             val_out = outs
             test_out = test(model)
-            save_all(ind)
 
+            # Saving the test output at best validation accuracy
+            os.makedirs(save_path, exist_ok=True)
+            test_path = 'test'+str(x)+'.txt'
+            with open(save_path + test_path, "w") as text_file:
+              text_file.write(test_out)
+
+            # To save the model, uncomment the following lines
             # model.save_pretrained(bestpoint_dir)  
             # print("Saving model bestpoint to ", bestpoint_dir)
+
           print("Best accuracy = "+str(max_accuracy))
           print("")
 
@@ -497,12 +488,4 @@ scheduler = get_linear_schedule_with_warmup(optimizer,
 
 train(model,  optimizer, scheduler, tokenizer, epochs, save_path, device)
 
-# print(max_accuracy, "\n", max_match)
-
-# def print_to_file(file_path, var):
-#   with open(save_path + file_path, "w") as text_file:
-#     text_file.write(var)
-
-# print_to_file('val'+str(ind)+'.txt',val_out)
-# print_to_file('test'+str(ind)+'.txt',test_out)
-# print_to_file('max'+str(ind)+'.txt', str(max_accuracy)+"\n"+str(max_array))
+print(max_accuracy, "\n", max_match)

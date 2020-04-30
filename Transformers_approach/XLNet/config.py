@@ -9,14 +9,22 @@ test_file = '../../datasets/test.txt'
 # maximum length of sentence after tokenization
 MAX_LEN = 72
 
+# tokenization using caseless or case tokens
+to_case = False
+
 # model name
 model_name = 'xlnet-large-cased'
 
 # Model hyperparameters
+to_freeze = False
+freeze_layers = 23
+
 xlnet_dim = 25*1024
 hidden_dim1 = 1000
 hidden_dim2 = 40
 final_size = 1
+
+dropout_prob = 0.3
 
 # batch size for training. 
 batch_size = 32
