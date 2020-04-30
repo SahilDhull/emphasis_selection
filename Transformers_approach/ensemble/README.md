@@ -10,4 +10,6 @@
 
 ## Running the ensemble
 
-```python run.py```
+```python run.py n1 n2 n3```
+
+E.g. `python run.py 1 2 3` runs the ensemble for 1 run of BERT, 2 runs of RoBERTa and 3 runs of XLNet
