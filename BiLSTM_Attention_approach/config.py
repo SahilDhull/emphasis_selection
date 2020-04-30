@@ -1,7 +1,9 @@
 #Location of datasets
-train_file = 'drive/My Drive/datasets/train.txt'
-dev_file = 'drive/My Drive/datasets/dev.txt'
-emb_file = 'drive/My Drive/datasets/glove.6B.100d.txt'
+train_file = '../datasets/train.txt'
+dev_file = '../datasets/dev.txt'
+
+# Location of Glove embedding file, couldn't include in git due to its size
+emb_file = 'glove/glove.6B.100d.txt'
 
 #index of words, tags and probability in the input
 word_index = 1 

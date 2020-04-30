@@ -2,7 +2,7 @@
 
 ## Directory Structure
 
-- config.py -> contains various config parameters
+- config.py -> contains various config parameters like file paths, model hyperparameters etc
 
 - model.py -> contains model for this approach
 
