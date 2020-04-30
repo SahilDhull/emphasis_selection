@@ -4,8 +4,8 @@ class transformer_model(nn.Module):
   def __init__(self, model_name, drop_prob = dropout_prob):
     super(transformer_model, self).__init__()
 
-    config = XLNetConfig.from_pretrained(model_name, output_hidden_states=True)
-    self.xlnet = XLNetModel.from_pretrained(model_name, config = config)
+    configuration = XLNetConfig.from_pretrained(model_name, output_hidden_states=True)
+    self.xlnet = XLNetModel.from_pretrained(model_name, config = configuration)
     
     # freezes layers of the model
     if to_freeze:
@@ -37,10 +37,12 @@ class transformer_model(nn.Module):
 
     output = self.xlnet(xlnet_ids, attention_mask = xlnet_mask)
 
+    # Concatenating hidden dimensions of all encoder layers
     xlnet_out = output[-1][0]
     for layers in range(1,25,1):
       xlnet_out = torch.cat((xlnet_out, output[-1][layers]), dim=2)
     
+    # Fully connected layers with relu and dropouts in between
     pred_logits = torch.relu(self.fc1(self.dropout(xlnet_out)))
     pred_logits = torch.relu(self.fc2(self.dropout(pred_logits)))
     pred_logits = torch.sigmoid(self.fc3(self.dropout(pred_logits)))
