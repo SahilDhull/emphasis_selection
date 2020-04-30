@@ -291,7 +291,7 @@ model = LM_LSTM_CRF(charset_size, char_emb_dim, char_rnn_dim, char_rnn_layers,
         
 model.init_word_embeddings(embeddings.to(device))  # initialize embedding layer with pre-trained embeddings
 model.fine_tune_word_embeddings(fine_tune_word_embeddings)  # fine-tune
-optimizer = optim.Adam(params=filter(lambda p: p.requires_grad, model.parameters()), lr=0.0001)
+optimizer = optim.Adam(params=filter(lambda p: p.requires_grad, model.parameters()), lr=learning_rate)
 
 loss_fn = nn.BCELoss().to(device)
 
@@ -315,7 +315,7 @@ class AverageMeter(object):
         self.count += n
         self.avg = self.sum / self.count
 
-def train(train_loader, model, loss_fn, optimizer, epoch, print_freq = 25):
+def train(train_loader, model, loss_fn, optimizer, epoch, print_freq = print_frequency):
     
     model.train()  # training mode enables dropout
 
