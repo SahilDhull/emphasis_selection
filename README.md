@@ -31,4 +31,5 @@ virtualenv project
 pip install -r requirements.txt
 ```
 
-Note: If not having virtualenv, install it using: `pip install virtualenv`
+Note: If not having virtualenv, install it using: `pip install virtualenv`.
+Download pre-trained GloVe embeddings from `http://nlp.stanford.edu/data/glove.6B.zip`
