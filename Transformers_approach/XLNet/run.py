@@ -25,7 +25,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 n_gpu = torch.cuda.device_count()
 torch.cuda.get_device_name(0)
 
-
+# Importing the tokenizer for Transformer model
 tokenizer = XLNetTokenizer.from_pretrained(model_name, do_lower_case = False)
 
 def read_token_map(file,word_index = 1,prob_index = 4, caseless = False):
@@ -123,56 +123,30 @@ def read_test_token_map(file,word_index = 1, caseless = False):
   
   return tokenized_texts, token_map, sent_length
 
+# Tokenization for train, dev and test data
 t_tokenized_texts, t_token_map, t_token_label, t_sent_length = read_token_map(train_file)
-print(t_tokenized_texts[100])
-print(t_token_map[100])
-print(t_token_label[100])
-print(t_sent_length[100])
-
 d_tokenized_texts, d_token_map, d_token_label, d_sent_length = read_token_map(dev_file)
-print(d_tokenized_texts[0])
-print(d_token_map[0])
-print(d_token_label[0])
-print(d_sent_length[0])
-
 f_tokenized_texts, f_token_map, f_sent_length = read_test_token_map(test_file)
-print(f_tokenized_texts[50])
-print(f_token_map[50])
-print(f_sent_length[50])
 
-MAX_LEN = 72
 
 # Use the xlnet tokenizer to convert the tokens to their index numbers in the xlnet vocabulary
+# Converting the tokens to their index numbers
 t_input_ids = [tokenizer.convert_tokens_to_ids(x) for x in t_tokenized_texts]
+d_input_ids = [tokenizer.convert_tokens_to_ids(x) for x in d_tokenized_texts]
+f_input_ids = [tokenizer.convert_tokens_to_ids(x) for x in f_tokenized_texts]
 
-# Pad our input tokens
+# Pad the input tokens
 t_input_ids = pad_sequences(t_input_ids, maxlen=MAX_LEN, dtype="long", truncating="post", padding="post")
 t_token_map = pad_sequences(t_token_map, maxlen=MAX_LEN, dtype="long", truncating="post", padding="post")
 t_token_label = pad_sequences(t_token_label, maxlen=MAX_LEN, dtype="float", truncating="post", padding="post")
 
-print(t_input_ids[100])
-print(t_token_map[100])
-print(t_token_label[100])
-
-d_input_ids = [tokenizer.convert_tokens_to_ids(x) for x in d_tokenized_texts]
-
-# Pad our input tokens
 d_input_ids = pad_sequences(d_input_ids, maxlen=MAX_LEN, dtype="long", truncating="post", padding="post")
 d_token_map = pad_sequences(d_token_map, maxlen=MAX_LEN, dtype="long", truncating="post", padding="post")
 d_token_label = pad_sequences(d_token_label, maxlen=MAX_LEN, dtype="float", truncating="post", padding="post")
 
-print(d_input_ids[0])
-print(d_token_map[0])
-print(d_token_label[0])
-
-f_input_ids = [tokenizer.convert_tokens_to_ids(x) for x in f_tokenized_texts]
-
-# Pad our input tokens
 f_input_ids = pad_sequences(f_input_ids, maxlen=MAX_LEN, dtype="long", truncating="post", padding="post")
 f_token_map = pad_sequences(f_token_map, maxlen=MAX_LEN, dtype="long", truncating="post", padding="post")
 
-print(f_input_ids[50])
-print(f_token_map[50])
 
 t_attention_masks = []
 # Create a mask of 1s for each token followed by 0s for padding
@@ -195,6 +169,7 @@ for seq in f_input_ids:
   f_attention_masks.append(seq_mask)
 print(f_attention_masks[50])
 
+# Converting to Tensors
 t_input_ids = torch.tensor(t_input_ids)
 t_token_map = torch.tensor(t_token_map )
 t_token_label = torch.tensor(t_token_label)
@@ -212,9 +187,7 @@ f_token_map = torch.tensor(f_token_map )
 f_attention_masks = torch.tensor(f_attention_masks)
 f_sent_length = torch.tensor(f_sent_length)
 
-# Select a batch size for training. 
-batch_size = 32
-# print(t_token_labels)
+
 # Create an iterator of our data with torch DataLoader 
 train_data = TensorDataset(t_input_ids, t_token_map, t_token_label, t_attention_masks, t_sent_length)
 train_sampler = RandomSampler(train_data)
@@ -469,9 +442,6 @@ def validation(model):
 
   return v_score,m_score,s
 
-
-
-ind = 12
 
 def train(model,  optimizer, scheduler, tokenizer, max_epochs, save_path, device, val_freq = 10):
   
