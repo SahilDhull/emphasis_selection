@@ -39,8 +39,10 @@ char_emb_dim = 30
 char_rnn_layers = 2
 word_rnn_layers = 2
 
-
-
+#learning rate
+learning_rate = 0.0001
+#print frequency
+print_frequency = 25
 epochs = 100 #epochs
 # Initial Score values
 max_score = 0 
