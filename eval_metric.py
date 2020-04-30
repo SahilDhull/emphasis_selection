@@ -1,5 +1,11 @@
 # ------  Defining evaluation metric  ------
 def intersection(lst1, lst2):
+    """
+    Get intersection of two lists.
+    :param lst1: first list
+    :param lst2: second list
+    :return: list containing intersection
+    """
 	lst3 = [value for value in lst1 if value in lst2]
 	return lst3
 
@@ -46,6 +52,13 @@ def match_M(batch_scores_no_padd, batch_labels_no_pad):
 
 # Fix the padding of predicted labels
 def fix_padding(scores_numpy, label_probs, mask_numpy):
+    """
+    Fixes the padding
+    :param scores_numpy: predicted scores
+    :param label_probs: actual probs
+    :param mask_numpy: mask
+    :return: scores and labels with no padding
+    """
     all_scores_no_padd = []
     all_labels_no_pad = []
     for i in range(len(mask_numpy)):
