@@ -1,3 +1,5 @@
+from config import *
+
 class ElmoLayer(nn.Module):
     def __init__(self,options_file, weight_file):
         super(ElmoLayer, self).__init__()

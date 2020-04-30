@@ -1,3 +1,4 @@
+# Importing modules and files
 from collections import Counter
 import codecs
 import itertools
@@ -13,6 +14,7 @@ import time
 from allennlp.modules.elmo import Elmo, batch_to_ids
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from config import *
+from model import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
