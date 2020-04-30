@@ -1,5 +1,4 @@
-
-
+# Importing modules
 import torch
 from torch import nn
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
@@ -19,18 +18,15 @@ import codecs
 from torch.nn.utils.rnn import pack_padded_sequence
 import os
 
+from config import *
+
+# Checking device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 n_gpu = torch.cuda.device_count()
 torch.cuda.get_device_name(0)
 
-# from google.colab import drive
-# drive.mount('/content/drive')
 
-train_file = 'drive/My Drive/datasets/train.txt'
-dev_file = 'drive/My Drive/datasets/dev.txt'
-test_file = 'drive/My Drive/datasets/test.txt'
-
-tokenizer = XLNetTokenizer.from_pretrained('xlnet-large-cased', do_lower_case = False)
+tokenizer = XLNetTokenizer.from_pretrained(model_name, do_lower_case = False)
 
 def read_token_map(file,word_index = 1,prob_index = 4, caseless = False):
   
@@ -392,7 +388,7 @@ def test(model):
 
 def save_all(x):
   print("\nSaving...\n")
-  save_path = 'drive/My Drive/datasets/ensemble/xlnet/xlnet_900_40/'
+  
   os.makedirs(save_path, exist_ok=True)
 
   val_path = 'val'+str(x)+'.txt'
@@ -473,10 +469,8 @@ def validation(model):
 
   return v_score,m_score,s
 
-max_accuracy = 0
-max_match = [0,0,0,0]
-val_out = ""
-test_out = ""
+
+
 ind = 12
 
 def train(model,  optimizer, scheduler, tokenizer, max_epochs, save_path, device, val_freq = 10):
@@ -549,11 +543,11 @@ def train(model,  optimizer, scheduler, tokenizer, max_epochs, save_path, device
 
 
 
-model = transformer_model('xlnet-large-cased').to(device)
+model = transformer_model(model_name).to(device)
 
-optimizer = AdamW(model.parameters(), lr=2e-5, eps = 1e-8)
+optimizer = AdamW(model.parameters(), lr=learning_rate, eps = epsilon)
 
-epochs = 20
+epochs = num_epochs
 total_steps = len(train_dataloader) * epochs
 
 # Create the learning rate scheduler.
