@@ -15,13 +15,13 @@ More formally,
 Given a sequence of words or tokens C = <img src="https://render.githubusercontent.com/render/math?math=\{ x_1, x_2, ..., x_n \}">, we want to compute a score <img src="https://render.githubusercontent.com/render/math?math=S_i"> for each <img src="https://render.githubusercontent.com/render/math?math=x_i"> which indicates the degree of emphasis to be laid on the word.
 
 ## Directory Structure
-datasets/ - contains the train and development sets
+- datasets/ - contains the train and development sets
 
-BiLSTM_Attention_approach/ - contains the model for 'BiLSTM + Attention' approach
+- BiLSTM_Attention_approach/ - contains the model for 'BiLSTM + Attention' approach
 
-Transformers_approach/ - contains model and ensemble files for Transformers approach
+- Transformers_approach/ - contains model and ensemble files for Transformers approach
 
-requirements.txt - contains versions of packages required
+- requirements.txt - contains versions of packages required
 
 ## Installation
 ```
