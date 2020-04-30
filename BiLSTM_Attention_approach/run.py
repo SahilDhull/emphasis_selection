@@ -44,6 +44,7 @@ def read_words_tags(file, word_ind, tag_ind, prob_ind, caseless=True):
             temp_t.append(feats[tag_ind])
             temp_p.append((float)(feats[prob_ind]))
         elif len(temp_w) > 0: # add all words of a sentence collected till now when line is space
+            # Sanity check
             assert len(temp_w) == len(temp_t)
             words.append(temp_w)
             tags.append(temp_t)
@@ -52,16 +53,18 @@ def read_words_tags(file, word_ind, tag_ind, prob_ind, caseless=True):
             temp_t = []
             temp_p = []
             
-    if len(temp_w) > 0:
+    if len(temp_w) > 0: # adding the words of the last sentence in the input
         assert len(temp_w) == len(temp_t)
         words.append(temp_w)
         tags.append(temp_t)
         probs.append(temp_p)
             
+    # Sanity check
     assert len(words) == len(tags) == len(probs)
     
     return words, tags, probs
 
+# reading words, tags and probs for training and development data
 t_words , t_tags , t_probs = read_words_tags(train_file,word_index,tag_index,prob_index,caseless)
 d_words , d_tags , d_probs = read_words_tags(dev_file,word_index,tag_index,prob_index,caseless)
 
@@ -98,7 +101,16 @@ def create_maps(words, tags, min_word_freq=5, min_char_freq=1):
 word_map, char_map, tag_map = create_maps(t_words+d_words,t_tags+d_tags,min_word_freq, min_char_freq)
 
 def create_input_tensors(words, tags, probs, word_map, char_map, tag_map):
-   
+    """
+    Creates input tensors with padding using maps.
+    :param words: words in the input
+    :param tags: tags in the input
+    :param probs: probs in the input
+    :param word_map: word map
+    :param char_map: character map
+    :param tag_map: tag map
+    :return: padded input tensors
+    """
     # Encode sentences into word maps with <end> at the end
     # [['dunston', 'checks', 'in', '<end>']] -> [[4670, 4670, 185, 4669]]
     wmaps = list(map(lambda s: list(map(lambda w: word_map.get(w, word_map['<unk>']), s)) + [word_map['<end>']], words))
@@ -397,7 +409,7 @@ def fix_padding(scores_numpy, label_probs,  mask_numpy):
     for i in range(len(mask_numpy)):
         all_scores_no_padd.append(scores_numpy[i][:mask_numpy[i]])
         all_labels_no_pad.append(label_probs[i][:mask_numpy[i]])
-
+    # Sanity check
     assert len(all_scores_no_padd) == len(all_labels_no_pad)
     return all_scores_no_padd, all_labels_no_pad
 
