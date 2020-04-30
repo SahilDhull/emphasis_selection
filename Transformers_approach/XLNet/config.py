@@ -13,6 +13,11 @@ MAX_LEN = 72
 model_name = 'xlnet-large-cased'
 
 # Model hyperparameters
+xlnet_dim = 25*1024
+hidden_dim1 = 1000
+hidden_dim2 = 40
+final_size = 1
+
 # batch size for training. 
 batch_size = 32
 

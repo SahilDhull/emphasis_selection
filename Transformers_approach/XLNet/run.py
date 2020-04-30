@@ -19,6 +19,7 @@ from torch.nn.utils.rnn import pack_padded_sequence
 import os
 
 from config import *
+from model import *
 
 # Checking device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -128,8 +129,6 @@ t_tokenized_texts, t_token_map, t_token_label, t_sent_length = read_token_map(tr
 d_tokenized_texts, d_token_map, d_token_label, d_sent_length = read_token_map(dev_file)
 f_tokenized_texts, f_token_map, f_sent_length = read_test_token_map(test_file)
 
-
-# Use the xlnet tokenizer to convert the tokens to their index numbers in the xlnet vocabulary
 # Converting the tokens to their index numbers
 t_input_ids = [tokenizer.convert_tokens_to_ids(x) for x in t_tokenized_texts]
 d_input_ids = [tokenizer.convert_tokens_to_ids(x) for x in d_tokenized_texts]
@@ -147,23 +146,21 @@ d_token_label = pad_sequences(d_token_label, maxlen=MAX_LEN, dtype="float", trun
 f_input_ids = pad_sequences(f_input_ids, maxlen=MAX_LEN, dtype="long", truncating="post", padding="post")
 f_token_map = pad_sequences(f_token_map, maxlen=MAX_LEN, dtype="long", truncating="post", padding="post")
 
+# Create a mask of 1s for each token followed by 0s for padding
 
 t_attention_masks = []
-# Create a mask of 1s for each token followed by 0s for padding
 for seq in t_input_ids:
   seq_mask = [float(i>0) for i in seq]
   t_attention_masks.append(seq_mask)
 print(t_attention_masks[100])
 
 d_attention_masks = []
-# Create a mask of 1s for each token followed by 0s for padding
 for seq in d_input_ids:
   seq_mask = [float(i>0) for i in seq]
   d_attention_masks.append(seq_mask)
 print(d_attention_masks[0])
 
 f_attention_masks = []
-# Create a mask of 1s for each token followed by 0s for padding
 for seq in f_input_ids:
   seq_mask = [float(i>0) for i in seq]
   f_attention_masks.append(seq_mask)
@@ -232,23 +229,11 @@ def read_for_output(file,word_index = 1):
 dev_words, dev_word_ids = read_for_output(dev_file)
 test_words, test_word_ids = read_for_output(test_file)
 
-print(dev_words[0])
-print(dev_word_ids[0])
-print(test_words[50])
-print(test_word_ids[50])
-
 def intersection(lst1, lst2):
     lst3 = [value for value in lst1 if value in lst2]
     return lst3
 
 def fix_padding(scores_numpy, label_probs,  mask_numpy):
-    #if len(scores_numpy) != len(mask_numpy):
-    #    print("Error: len(scores_numpy) != len(mask_numpy)")
-    #assert len(scores_numpy) == len(mask_numpy)
-    #if len(label_probs) != len(mask_numpy):
-    #    print("len(label_probs) != len(mask_numpy)")
-    #assert len(label_probs) == len(mask_numpy)
-
     all_scores_no_padd = []
     all_labels_no_pad = []
     for i in range(len(mask_numpy)):
@@ -272,13 +257,7 @@ def match_M(batch_scores_no_padd, batch_labels_no_pad):
             if len(s) <=m:
                 continue
             h = m
-            # if len(s) > h:
-            #     while (s[np.argsort(s)[-h]] == s[np.argsort(s)[-(h + 1)]] and h < (len(s) - 1)):
-            #         h += 1
-
-            # s = np.asarray(s.cpu())
             s = np.asarray(s)
-            #ind_score = np.argsort(s)[-h:]
             ind_score = sorted(range(len(s)), key = lambda sub: s[sub])[-h:]
             score_lst.append(ind_score)
 
@@ -287,9 +266,7 @@ def match_M(batch_scores_no_padd, batch_labels_no_pad):
         for l in batch_labels_no_pad:
             if len(l) <=m:
                 continue
-            # if it contains several top values with the same amount
             h = m
-            # l = l.cpu()
             if len(l) > h:
                 while (l[np.argsort(l)[-h]] == l[np.argsort(l)[-(h + 1)]] and h < (len(l) - 1)):
                     h += 1
@@ -302,12 +279,6 @@ def match_M(batch_scores_no_padd, batch_labels_no_pad):
         for i in range(len(score_lst)):
             intersect = intersection(score_lst[i], label_lst[i])
             intersects_lst.append((len(intersect))/(min(m, len(score_lst[i]))))
-            # sorted_score_lst = sorted(score_lst[i])
-            # sorted_label_lst =  sorted(label_lst[i])
-            # if sorted_score_lst==sorted_label_lst:
-            #     exact_lst.append(1)
-            # else:
-            #     exact_lst.append(0)
         batch_num_m.append(len(score_lst))
         batch_score_m.append(sum(intersects_lst))
     return batch_num_m, batch_score_m
@@ -336,8 +307,7 @@ def test(model):
       v_token_starts = batch[1].to(device)
       v_sent_length = batch[3]
             
-      # Telling the model not to compute or store gradients, saving memory and
-      # speeding up validation
+      # Telling the model not to compute or store gradients, saving memory and speeding up
       with torch.no_grad():        
           output = model(v_input_ids, v_input_mask, v_token_starts, v_sent_length)
       
@@ -525,8 +495,14 @@ scheduler = get_linear_schedule_with_warmup(optimizer,
                                             num_warmup_steps = 0, # Default value in run_glue.py
                                             num_training_steps = total_steps)
 
-save_path = 'drive/My Drive/datasets/results/xlnet_large/'
 train(model,  optimizer, scheduler, tokenizer, epochs, save_path, device)
 
-print(max_accuracy, "\n", max_match)
+# print(max_accuracy, "\n", max_match)
 
+# def print_to_file(file_path, var):
+#   with open(save_path + file_path, "w") as text_file:
+#     text_file.write(var)
+
+# print_to_file('val'+str(ind)+'.txt',val_out)
+# print_to_file('test'+str(ind)+'.txt',test_out)
+# print_to_file('max'+str(ind)+'.txt', str(max_accuracy)+"\n"+str(max_array))

@@ -1,9 +1,11 @@
+from config import *
+
 class transformer_model(nn.Module):
   def __init__(self, model_name, drop_prob = 0.3):
     super(transformer_model, self).__init__()
 
-    config = XLNetConfig.from_pretrained('xlnet-large-cased', output_hidden_states=True)
-    self.xlnet = XLNetModel.from_pretrained('xlnet-large-cased', config = config)
+    config = XLNetConfig.from_pretrained(model_name, output_hidden_states=True)
+    self.xlnet = XLNetModel.from_pretrained(model_name, config = config)
     
     # the commented lines freezes layers of the model
     # cnt=0
@@ -12,11 +14,6 @@ class transformer_model(nn.Module):
     #   if cnt<=23:
     #     for param in child.parameters():
     #       param.requires_grad = False
-
-    xlnet_dim = 25*1024
-    hidden_dim1 = 1000
-    hidden_dim2 = 40
-    final_size = 1
 
     self.fc1 = nn.Linear(xlnet_dim, hidden_dim1)
     self.fc2 = nn.Linear(hidden_dim1, hidden_dim2)
@@ -50,11 +47,6 @@ class transformer_model(nn.Module):
 
     pred_labels = torch.tensor(np.zeros(xlnet_token_starts.size()),dtype = torch.float64).to(device)
 
-    # print(pred_logits[0])
-    # print(pred_labels[0])
-    # print(labels[0])
-    # print(xlnet_token_starts[0])
-
     for b in range(batch_size):
       for w in range(pad_size):
         if(xlnet_token_starts[b][w]!=0):
@@ -67,10 +59,10 @@ class transformer_model(nn.Module):
               end = st+1
               while(xlnet_mask[b][end]!=0):
                 end = end+1
+            # For using average or just the first token of a word (in case of word splitting by tokenizer)
             # pred_labels[b][w] = self.avg(pred_logits[b],st,end)
             pred_labels[b][w] = pred_logits[b][xlnet_token_starts[b][w]]
 
-    # print(pred_labels[0])
 
     if(labels != None):
       lm_lengths, lm_sort_ind = lm_lengths.sort(dim=0, descending=True)
