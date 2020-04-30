@@ -6,11 +6,17 @@ def intersection(lst1, lst2):
     :param lst2: second list
     :return: list containing intersection
     """
-	lst3 = [value for value in lst1 if value in lst2]
-	return lst3
+    lst3 = [value for value in lst1 if value in lst2]
+    return lst3
 
 def match_M(batch_scores_no_padd, batch_labels_no_pad):
-
+    """
+    Compute score.
+    :param batch_scores_no_padd: predicted scores of the batch without padding
+    :param batch_labels_no_padd: actual labels of the batch without padding
+    :return: batch_num_m: number of words considered for m=[1,2,3,4] while evaluating score
+             batch_score_m: total score of words considered for m=[1,2,3,4]
+    """
     top_m = [1, 2, 3, 4]
     batch_num_m=[]
     batch_score_m=[]

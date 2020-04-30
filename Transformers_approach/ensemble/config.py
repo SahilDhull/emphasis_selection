@@ -11,4 +11,4 @@ val_length = 392
 test_length = 743
 
 # output of ensemble are stored in save path
-save_path = 'output/'
+save_path = './output/'
