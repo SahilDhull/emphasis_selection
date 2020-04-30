@@ -14,4 +14,4 @@
 
 Specify all model hyperparameters in config.py
 
-The test outputs are saved in ../ensemble directory
+The test outputs are saved in `../runs/xlnet/` directory
